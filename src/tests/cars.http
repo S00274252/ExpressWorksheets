@@ -1,10 +1,10 @@
-@endpoint = http://localhost:2121/api/v1/cars
+@endpoint = http://localhost:3000/api/v1/cars
 
 ###
 POST {{endpoint}} HTTP/1.1
 content-type: application/json
 
-{ "test" : "post test" }
+{ "id" : "2", "make" : "Toyota", "model" : "Camry", "year" : 2020, "color" : "Blue" }
 ###
 GET  {{endpoint}} HTTP/3.0
 content-type: application/json
