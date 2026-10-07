@@ -9,8 +9,8 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 
 const port = env.port;
-
-const app: Application = express();
+ 
+export const app: Application = express();
 
 app.use(express.json());
 
@@ -43,12 +43,13 @@ app.get('/sirozha', async (_req : Request, res: Response) => {
     });
 });
 
-const startServer = async () => {
-  await connectDB();
+// const startServer = async () => {
+//   await connectDB();
 
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-};
+//   app.listen(port, () => {
+//     console.log(`Server running on port ${port}`);
+//   });
+// };
 
-startServer();
+// startServer();
+
