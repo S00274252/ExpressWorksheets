@@ -8,8 +8,6 @@ describe("GET /ping", () => {
 
         expect(response.status).toBe(200);
 
-        expect(response.body).toEqual({
-            message: "hello from Roman"
-        });
+        expect(response.body).toEqual("hello from Roman");
     });
 });
