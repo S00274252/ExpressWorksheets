@@ -47,13 +47,6 @@ export const validate = (schema: z.ZodObject<any>) => (
     req.body = validation.data.body;
   }
 
-  if (validation.data.params !== undefined) {
-    req.params = validation.data.params;
-  }
-
-  if (validation.data.query !== undefined) {
-    req.query = validation.data.query;
-  }
 
   next();
 };
