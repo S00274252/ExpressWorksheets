@@ -7,6 +7,7 @@ import { env } from "./config/env";
 import { loggerMiddleware } from "./middleware/logger.middleware";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
+import { errorHandler } from "./middleware/errorhandling.middleware";
 
 const port = env.port;
  
@@ -53,6 +54,8 @@ app.get('/sirozha', async (_req : Request, res: Response) => {
     message: "this is sirozha",
     });
 });
+
+app.use(errorHandler);
 
 // const startServer = async () => {
 //   await connectDB();

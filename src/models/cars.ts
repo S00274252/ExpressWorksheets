@@ -24,16 +24,21 @@ import { z } from 'zod';
 
 
 export const createCarZSchema = z.object({
-  make: z.string().min(1),
-  model: z.string().min(1),
-  year: z.number().min(1950).optional(),
+  body: z.object({
+    make: z.string().min(1),
+    model: z.string().min(1),
+    year: z.number().min(1950).optional(),
+  }),
 });
 
 export const updateCarZSchema = z.object({
-  make: z.string().min(1).optional(),
-  model: z.string().min(1).optional(),
-  year: z.number().min(1950).optional(),
+  body: z.object({
+    make: z.string().min(1),
+    model: z.string().min(1),
+    year: z.number().min(1950).optional(),
+  }),
 });
+
 
 export interface ICar {
   make: string;
@@ -51,3 +56,12 @@ const carSchema = new Schema<ICar>(
 );
 
 export const CarModel = model<ICar>('Car', carSchema);
+
+export const carParamsSchema = z.object({
+  params: z.object({
+    id: z
+      .string()
+      .regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId')
+  })
+});
+

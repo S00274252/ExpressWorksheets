@@ -111,7 +111,7 @@ describe('Cars API', () => {
 
     const response = await request(app).delete(`/api/v1/cars/${missingId}`);
 
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
     expect(response.body).toEqual({ message: 'Car not found' });
   });
 });

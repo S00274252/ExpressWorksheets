@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CarService } from '../services/cars';
-import { createCarZSchema } from '../models/cars';
+import { NotFoundError } from '../utils/apperror';
 
 const carService = new CarService();
-
 
 export class CarController {
 
@@ -54,11 +53,14 @@ export class CarController {
 */
 
 
-  getCarById = async (req: Request, res: Response): Promise<void> => {
-
+  getCarById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
       const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       const car = await carService.getCarById(id);
       res.status(200).json(car);
+    } catch (error) {
+      next(error);
+    }
   };
 
 
@@ -85,29 +87,26 @@ export class CarController {
  */
 
 
-  createCar = async (req: Request, res: Response): Promise<void> => {
+  createCar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const validation = createCarZSchema.safeParse(req.body);
-
-      if (!validation.success) {
-        res.status(400).json({ message: 'Invalid car data', errors: validation.error.issues });
-        return;
-      }
-
       const createdCar = await carService.createCar({
-        ...validation.data,
-        year: validation.data.year ?? new Date().getFullYear(),
+        ...req.body,
+        year: req.body.year ?? new Date().getFullYear(),
       });
       res.status(201).json(createdCar);
     } catch (error) {
-      res.status(500).json({ message: 'Error inserting into MongoDB', error });
+      next(error);
     }
   };
 
-  updateCar = async (req: Request, res: Response): Promise<void> => {
-    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const updatedCar = await carService.updateCar(id, req.body);
-    res.status(200).json(updatedCar);
+  updateCar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      const updatedCar = await carService.updateCar(id, req.body);
+      res.status(200).json(updatedCar);
+    } catch (error) {
+      next(error);
+    }
   };
 
   /**
@@ -133,9 +132,17 @@ export class CarController {
 */
 
 
-  deleteCar = async (_req: Request, res: Response): Promise<void> => {
-    const id = Array.isArray(_req.params.id) ? _req.params.id[0] : _req.params.id;
-    const deletedCar = await carService.deleteCar(id);
-    res.status(200).json(deletedCar);
+  deleteCar = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = Array.isArray(_req.params.id) ? _req.params.id[0] : _req.params.id;
+      const deletedCar = await carService.deleteCar(id);
+      res.status(200).json(deletedCar);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        res.status(400).json({ message: 'Car not found' });
+        return;
+      }
+      next(error);
+    }
   };
 }
