@@ -2,21 +2,23 @@ import express, {Application, Request, Response} from "express" ;
 //import userRoutes from './routes/';
 import cors from "cors"
 import carRoutes from './routes/cars';
-import { env } from "./config/env";
+// import { env } from "./config/env";
 // import { connectDB } from "./config/database";
 // import { authenticateKey } from "./middleware/auth.middleware";
 import { loggerMiddleware } from "./middleware/logger.middleware";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import { errorHandler } from "./middleware/errorhandling.middleware";
+import authRoutes from './routes/auth';
 
-const port = env.port;
+// const port = env.port;
  
 export const app: Application = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/cars', loggerMiddleware, carRoutes);
 
 app.use(

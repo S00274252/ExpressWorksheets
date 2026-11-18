@@ -4,6 +4,7 @@ import { CarController } from '../controllers/cars';
 import {loggerMiddleware} from '../middleware/logger.middleware';
 import {validate} from '../middleware/validate.middleware';
 import {carParamsSchema, createCarZSchema, updateCarZSchema}  from '../models/cars';
+import { authenticateJWT } from '../middleware/auth.middleware';
 
 const router = Router();
 const carController = new CarController();
@@ -13,6 +14,6 @@ router.get('/', carController.getCars);
 router.get('/:id', validate(carParamsSchema), carController.getCarById);
 router.post('/',  loggerMiddleware,  validate(createCarZSchema), carController.createCar);
 router.put('/:id', validate(updateCarZSchema), carController.updateCar);
-router.delete('/:id', validate(carParamsSchema), carController.deleteCar);
+router.delete('/:id', authenticateJWT, validate(carParamsSchema), carController.deleteCar);
 
 export default router;

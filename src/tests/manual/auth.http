@@ -1,0 +1,52 @@
+@endpoint = http://localhost:3000/api/v1/auth
+@endpointCars = http://localhost:3000/api/v1/cars
+
+# @name postAUser
+POST {{endpoint}}/register HTTP/1.1
+content-type: application/json
+
+{ "name" : "teser2", "email" : "testuser22@example.com", "password" : "testpassword" }
+
+### @name registerSameUserEmail
+POST {{endpoint}}/register HTTP/1.1
+content-type: application/json
+
+{ "name" : "testuser", "email" : "testuser@example.com", "password" : "testpassword" }
+
+###
+
+# @name login
+POST {{endpoint}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "testpassword"
+}
+
+###
+
+@accessToken = {{login.response.body.token}}
+
+# @name getMe
+GET {{endpoint}}/me HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### @name deleteCar
+DELETE {{endpointCars}}/6ae9cd9bfed8a35651922d47 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+ 
+
+### @name loginWrongPasword
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{ "email" : "testuser@example.com", "password" : "wrongpassword" }
+
+### @name loginWrongEmail
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{ "email" : "wronguser@example.com", "password" : "wrongpassword" }
+
